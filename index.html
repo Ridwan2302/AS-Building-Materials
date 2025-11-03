@@ -78,37 +78,6 @@
             box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
         }
 
-        /* Filtres de catégories */
-        .category-filters {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.5rem;
-            margin: 1rem auto;
-            max-width: 800px;
-            padding: 0 1rem;
-        }
-
-        .category-btn {
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .category-btn:hover {
-            background-color: #f0f0f0;
-        }
-
-        .category-btn.active {
-            background-color: #3498db;
-            color: white;
-            border-color: #3498db;
-        }
-
         /* Liste des produits */
         .products-container {
             max-width: 1200px;
@@ -150,16 +119,6 @@
             font-weight: 700;
             color: #e74c3c;
             font-size: 1.2rem;
-        }
-
-        .product-category {
-            display: inline-block;
-            background-color: #ecf0f1;
-            color: #7f8c8d;
-            padding: 0.3rem 0.7rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            margin-top: 0.5rem;
         }
 
         /* État de chargement */
@@ -223,12 +182,6 @@
             .product-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .category-filters {
-                justify-content: flex-start;
-                overflow-x: auto;
-                padding-bottom: 0.5rem;
-            }
         }
     </style>
 </head>
@@ -247,10 +200,6 @@
         <input type="text" id="searchInput" class="search-box" placeholder="Rechercher un produit...">
     </div>
 
-    <div class="category-filters" id="categoryFilters">
-        <!-- Les boutons de catégories seront générés dynamiquement -->
-    </div>
-
     <main class="products-container">
         <div class="product-grid" id="productGrid">
             <!-- Les produits seront chargés ici -->
@@ -258,252 +207,204 @@
     </main>
 
     <footer>
-        <p>AS Building Materials &copy; 2025 - Tous droits réservés</p>
+        <p>AS Building Materials &copy; 2023 - Tous droits réservés</p>
     </footer>
 
     <div class="pwa-badge" id="pwaBadge">Installer l'application</div>
 
     <script>
-        // Données des produits organisées par catégorie
+        // Données des produits
         const products = [
-            // Plomberie PPR
-            { id: 1, name: "Té 20/25", price: 100, category: "Plomberie PPR" },
-            { id: 2, name: "Coude PPR 16/20", price: 70, category: "Plomberie PPR" },
-            { id: 3, name: "Manchon PPR 16/20", price: 70, category: "Plomberie PPR" },
-            { id: 4, name: "Té PPR 16/20", price: 76, category: "Plomberie PPR" },
-            { id: 5, name: "Coude F PPR 16/20", price: 250, category: "Plomberie PPR" },
-            { id: 6, name: "Embout PPR 16/20", price: 250, category: "Plomberie PPR" },
-            { id: 7, name: "Réduction 25/16 PPR", price: 100, category: "Plomberie PPR" },
-
-            // Rouleaux & Bourrettes
-            { id: 8, name: "Rouleau Deluxe", price: 16000, category: "Rouleaux & Bourrettes" },
-            { id: 9, name: "Bourette Verte", price: 19000, category: "Rouleaux & Bourrettes" },
-            { id: 10, name: "Bourette Bleue", price: 17000, category: "Rouleaux & Bourrettes" },
-            { id: 11, name: "Rouleau Japon/Noir 45/19", price: 12000, category: "Rouleaux & Bourrettes" },
-            { id: 12, name: "Rouleau Jaune/Noir 19/24", price: 13000, category: "Rouleaux & Bourrettes" },
-            { id: 13, name: "Perle 27", price: 13000, category: "Rouleaux & Bourrettes" },
-            { id: 14, name: "VC Chasse Basse", price: 16000, category: "Rouleaux & Bourrettes" },
-            { id: 15, name: "Lave-main 35", price: 3500, category: "Rouleaux & Bourrettes" },
-            { id: 16, name: "Lave-main 45", price: 4500, category: "Rouleaux & Bourrettes" },
-            { id: 17, name: "Rouleau Passola 30", price: 14000, category: "Rouleaux & Bourrettes" },
-            { id: 18, name: "Rouleau Passola 40", price: 19000, category: "Rouleaux & Bourrettes" },
-            { id: 19, name: "Africole 15 kg", price: 10000, category: "Rouleaux & Bourrettes" },
-
-            // Électricité (Interrupteurs & Prises)
-            { id: 20, name: "Interrupteur simple allumage", price: 2500, category: "Électricité" },
-            { id: 21, name: "Interrupteur simple allumage Ingelec", price: 6000, category: "Électricité" },
-            { id: 22, name: "Plaque vierge", price: 2500, category: "Électricité" },
-            { id: 23, name: "Prise TV", price: 4000, category: "Électricité" },
-            { id: 24, name: "Prise TV Ingelec", price: 16000, category: "Électricité" },
-            { id: 25, name: "Prise TV grand", price: 700, category: "Électricité" },
-
-            // Robinetterie
-            { id: 26, name: "Robinet arrêt 16/20", price: 1000, category: "Robinetterie" },
-            { id: 27, name: "Robinet arrêt 20/25", price: 1300, category: "Robinetterie" },
-            { id: 28, name: "Robinet arrêt à boisseau 16/20", price: 1200, category: "Robinetterie" },
-            { id: 29, name: "Robinet arrêt à boisseau 20/25", price: 1700, category: "Robinetterie" },
-            { id: 30, name: "Robinet de douche", price: 1000, category: "Robinetterie" },
-            { id: 31, name: "Robinet de cuisine", price: 1500, category: "Robinetterie" },
-            { id: 32, name: "Robinet de lavabo", price: 1500, category: "Robinetterie" },
-            { id: 33, name: "Robinet lavabo Faucet", price: 2500, category: "Robinetterie" },
-            { id: 34, name: "Robinet de douche Faucet", price: 2000, category: "Robinetterie" },
-            { id: 35, name: "Robinet cuisine Premier", price: 2500, category: "Robinetterie" },
-            { id: 36, name: "Tête de gaz (paquet)", price: 6000, category: "Robinetterie" },
-            { id: 37, name: "Clé placard 2 coups", price: 6000, category: "Robinetterie" },
-            { id: 38, name: "Clé placard 1 coup", price: 3500, category: "Robinetterie" },
-            { id: 39, name: "Flexible de douche en fer", price: 1300, category: "Robinetterie" },
-            { id: 40, name: "Flexible de douche", price: 1000, category: "Robinetterie" },
-            { id: 41, name: "Flexible de douche femelle", price: 2500, category: "Robinetterie" },
-
-            // PVC
-            { id: 42, name: "Coude 16/20 PVC", price: 100, category: "PVC" },
-            { id: 43, name: "Coude 20/25 PVC", price: 300, category: "PVC" },
-            { id: 44, name: "Coude F 16/20 PVC", price: 200, category: "PVC" },
-            { id: 45, name: "Coude F 20/25 PVC", price: 300, category: "PVC" },
-            { id: 46, name: "Té 16/20 PVC", price: 100, category: "PVC" },
-
-            // Pinceaux et Attaches
-            { id: 47, name: "Paquet de pinceaux N°1", price: 1000, category: "Pinceaux et Attaches" },
-            { id: 48, name: "Pinceau 1½", price: 1500, category: "Pinceaux et Attaches" },
-            { id: 49, name: "Pinceau N°2", price: 2000, category: "Pinceaux et Attaches" },
-            { id: 50, name: "Pinceau N°3", price: 3000, category: "Pinceaux et Attaches" },
-            { id: 51, name: "Pinceau N°50", price: 3000, category: "Pinceaux et Attaches" },
-            { id: 52, name: "Pinceau 50", price: 3500, category: "Pinceaux et Attaches" },
-            { id: 53, name: "Pinceau 40", price: 2500, category: "Pinceaux et Attaches" },
-            { id: 54, name: "Attache N°8", price: 250, category: "Pinceaux et Attaches" },
-            { id: 55, name: "Attache N°9", price: 300, category: "Pinceaux et Attaches" },
-            { id: 56, name: "Attache N°10", price: 350, category: "Pinceaux et Attaches" },
-            { id: 57, name: "Cheville à vis N°8", price: 600, category: "Pinceaux et Attaches" },
-            { id: 58, name: "Accordéon 32", price: 800, category: "Pinceaux et Attaches" },
-            { id: 59, name: "Accordéon 40", price: 800, category: "Pinceaux et Attaches" },
-
-            // Robinetterie (variantes)
-            { id: 60, name: "Robinet à clé 16/20", price: 1200, category: "Robinetterie" },
-            { id: 61, name: "Robinet à clé 16/20 N°2", price: 1200, category: "Robinetterie" },
-            { id: 62, name: "Robinet à boisseau 16/20", price: 1500, category: "Robinetterie" },
-            { id: 63, name: "Robinet à clé 20/25", price: 1300, category: "Robinetterie" },
-            { id: 64, name: "Robinet à clé 20/25 (autre modèle)", price: 1400, category: "Robinetterie" },
-            { id: 65, name: "Robinet à boisseau 20/25", price: 1800, category: "Robinetterie" },
-
-            // Accessoires Salle de Bain / Électricité
-            { id: 66, name: "Porte-savon", price: 600, category: "Accessoires Salle de Bain" },
-            { id: 67, name: "Porte-papier", price: 1000, category: "Accessoires Salle de Bain" },
-            { id: 68, name: "Tablette", price: 1000, category: "Accessoires Salle de Bain" },
-            { id: 69, name: "Boîte 100 × 100 étanche", price: 400, category: "Électricité" },
-            { id: 70, name: "Boîte 80 × 80", price: 250, category: "Électricité" },
-            { id: 71, name: "Boîte 150", price: 1300, category: "Électricité" },
-            { id: 72, name: "Boîte 180 étanche", price: 1700, category: "Électricité" },
-            { id: 73, name: "Boîte 240 étanche", price: 2500, category: "Électricité" },
-            { id: 74, name: "Boîte de dérivation 196", price: 600, category: "Électricité" },
-            { id: 75, name: "Boîte de dérivation 165", price: 100, category: "Électricité" },
-            { id: 76, name: "Boîte de dérivation 294", price: 1700, category: "Électricité" },
-            { id: 77, name: "Décapant", price: null, category: "Produits divers" },
-            { id: 78, name: "Écras", price: 3500, category: "Produits divers" },
-            { id: 79, name: "Disque à couper tablette", price: null, category: "Produits divers" },
-            { id: 80, name: "Disque à couper", price: 800, category: "Produits divers" },
-            { id: 81, name: "Disque à mêler", price: 1600, category: "Produits divers" },
-            { id: 82, name: "Colle à bois 5 kg (bleue)", price: 7500, category: "Colles" },
-            { id: 83, name: "Dulian A Ultra", price: 800, category: "Produits divers" },
-            { id: 84, name: "Dulian C", price: 1400, category: "Produits divers" },
-            { id: 85, name: "Dulian A (4 L)", price: 3500, category: "Produits divers" },
-            { id: 86, name: "Dulian C (4 L)", price: 7500, category: "Produits divers" },
-            { id: 87, name: "Sonnerie", price: 1000, category: "Électricité" },
-            { id: 88, name: "Paquet de prises (prises têtes)", price: 3000, category: "Électricité" },
-            { id: 89, name: "Prise simple", price: 400, category: "Électricité" },
-            { id: 90, name: "Interrupteur double", price: 400, category: "Électricité" },
-            { id: 91, name: "Interrupteur simple (à l'image)", price: 2500, category: "Électricité" },
-            { id: 92, name: "Interrupteur double (à l'image)", price: 3500, category: "Électricité" },
-            { id: 93, name: "Paquet de prises têtes étanches", price: 9000, category: "Électricité" },
-            { id: 94, name: "Sonnerie (autre modèle)", price: 1200, category: "Électricité" },
-            { id: 95, name: "Boutons pour soie étanches (×10)", price: 9000, category: "Électricité" },
-            { id: 96, name: "Plaques vierges (paquet)", price: 2500, category: "Électricité" },
-            { id: 97, name: "Douille", price: 4500, category: "Électricité" },
-            { id: 98, name: "Paquet de douilles Ingelec", price: 8500, category: "Électricité" },
-            { id: 99, name: "Prise + terre", price: 10000, category: "Électricité" },
-
-            // Électricité Ingelec (Haute gamme)
-            { id: 100, name: "Interrupteur simple va-et-vient Ingelec", price: 9000, category: "Électricité Ingelec" },
-            { id: 101, name: "Interrupteur simple allumage Ingelec", price: 6000, category: "Électricité Ingelec" },
-            { id: 102, name: "Interrupteur double allumage Ingelec", price: 14000, category: "Électricité Ingelec" },
-            { id: 103, name: "Paquet interrupteur double va-et-vient", price: 16000, category: "Électricité Ingelec" },
-            { id: 104, name: "Paquet de sonneries Ingelec", price: 2500, category: "Électricité Ingelec" },
-            { id: 105, name: "Boutons pour soie encastrés Ingelec", price: 17500, category: "Électricité Ingelec" },
-            { id: 106, name: "Prise + terre étanche encastrée", price: 17500, category: "Électricité Ingelec" },
-            { id: 107, name: "Prise TV", price: 4000, category: "Électricité Ingelec" },
-            { id: 108, name: "Prise TV Ingelec", price: 16000, category: "Électricité Ingelec" },
-
-            // Rouleaux à peindre
-            { id: 109, name: "Rouleau à peindre petit", price: 300, category: "Rouleaux & Bourrettes" },
-            { id: 110, name: "Rouleau à peindre grand", price: 700, category: "Rouleaux & Bourrettes" },
-            { id: 111, name: "Rouleau plastifiable", price: 20000, category: "Rouleaux & Bourrettes" },
-            { id: 112, name: "Rouleau minci", price: 12000, category: "Rouleaux & Bourrettes" },
-
-            // Peintures & Vernis
-            { id: 113, name: "Vernis C Ultra", price: 2500, category: "Peintures & Vernis" },
-            { id: 114, name: "Antirouille 1 kg", price: 1800, category: "Peintures & Vernis" },
-            { id: 115, name: "Antirouille 4 kg", price: 6500, category: "Peintures & Vernis" },
-            { id: 116, name: "Delux 1 kg Mat", price: null, category: "Peintures & Vernis" },
-            { id: 117, name: "Delux 4 kg", price: 7000, category: "Peintures & Vernis" },
-            { id: 118, name: "Delux 1 kg", price: 2200, category: "Peintures & Vernis" },
-
-            // Raccords & PEX
-            { id: 119, name: "Rouleaux Pex 12/16", price: 30000, category: "Raccords & PEX" },
-            { id: 120, name: "Écrou 12/16", price: 600, category: "Raccords & PEX" },
-            { id: 121, name: "Manchon 12/16", price: 600, category: "Raccords & PEX" },
-            { id: 122, name: "Coude S 12/16", price: 600, category: "Raccords & PEX" },
-            { id: 123, name: "Coude F 12/16", price: 600, category: "Raccords & PEX" },
-            { id: 124, name: "Tés Pex 12/16", price: 600, category: "Raccords & PEX" },
-            { id: 125, name: "Robinet d'arrêt 12/16", price: 1300, category: "Raccords & PEX" },
-            { id: 126, name: "Coude 110", price: 700, category: "Raccords & PEX" },
-            { id: 127, name: "Coude 100", price: 500, category: "Raccords & PEX" },
-            { id: 128, name: "Coude 75", price: 450, category: "Raccords & PEX" },
-            { id: 129, name: "Coude 125", price: 1100, category: "Raccords & PEX" },
-            { id: 130, name: "Coude 1/8 110", price: 750, category: "Raccords & PEX" },
-            { id: 131, name: "Coude 1/8 100", price: 550, category: "Raccords & PEX" },
-            { id: 132, name: "Coude 1/8 75", price: 450, category: "Raccords & PEX" },
-            { id: 133, name: "Coude 1/8 125", price: 1100, category: "Raccords & PEX" },
-            { id: 134, name: "Tés 75", price: 600, category: "Raccords & PEX" },
-            { id: 135, name: "Tés 110", price: 1000, category: "Raccords & PEX" },
-            { id: 136, name: "Tés 100", price: 900, category: "Raccords & PEX" },
-            { id: 137, name: "Tés 125", price: 1500, category: "Raccords & PEX" },
-
-            // Clés
-            { id: 138, name: "Clé 2 Cup", price: 1000, category: "Clés" },
-            { id: 139, name: "Clé maison", price: 2700, category: "Clés" },
-            { id: 140, name: "Clé Cannon", price: 3500, category: "Clés" },
-            { id: 141, name: "Clé Robson Cannon", price: 3200, category: "Clés" },
-            { id: 142, name: "Clé Robson douche", price: 3200, category: "Clés" },
-
-            // Divers
-            { id: 143, name: "Boîte Switch Papier", price: 6000, category: "Divers" },
-            { id: 144, name: "Acide muriatique", price: 500, category: "Divers" },
-            { id: 145, name: "Camping gaz", price: 500, category: "Divers" },
-            { id: 146, name: "Pérical", price: 1200, category: "Divers" },
-            { id: 147, name: "Pérical Petit", price: 500, category: "Divers" },
-            { id: 148, name: "Émaille", price: 600, category: "Divers" },
-
-            // Noir à tableau
-            { id: 149, name: "Noir à tableau 1 kg", price: 2100, category: "Noir à tableau" },
-            { id: 150, name: "Noir à tableau 500 g", price: 1300, category: "Noir à tableau" },
-
-            // Dominos
-            { id: 151, name: "Paquet de domino 10", price: 3500, category: "Dominos" },
-            { id: 152, name: "Paquet de domino 16", price: 4500, category: "Dominos" },
-            { id: 153, name: "Paquet de domino 25", price: 7500, category: "Dominos" },
-
-            // Ciments / Enduits (30 kg)
-            { id: 154, name: "Super 30 kg", price: 12500, category: "Ciments / Enduits" },
-            { id: 155, name: "Trapo 30 kg", price: 12000, category: "Ciments / Enduits" },
-            { id: 156, name: "Milano 30 kg", price: 13500, category: "Ciments / Enduits" },
-            { id: 157, name: "Boss 30 kg", price: 15000, category: "Ciments / Enduits" },
-            { id: 158, name: "Champion 30 kg", price: 12500, category: "Ciments / Enduits" },
-            { id: 159, name: "Deluxe 30 kg", price: 21500, category: "Ciments / Enduits" },
-
-            // Ciments / Enduits (15 kg)
-            { id: 160, name: "Super 15 kg", price: 6500, category: "Ciments / Enduits" },
-            { id: 161, name: "Trapo 15 kg", price: 6500, category: "Ciments / Enduits" },
-            { id: 162, name: "Boss 15 kg", price: 7000, category: "Ciments / Enduits" },
-            { id: 163, name: "Deluxe 15 kg", price: 12000, category: "Ciments / Enduits" },
-            { id: 164, name: "Champion 15 kg", price: 6500, category: "Ciments / Enduits" },
-            { id: 165, name: "Milano 15 kg", price: 6500, category: "Ciments / Enduits" },
-
-            // Ciments / Enduits (5 kg)
-            { id: 166, name: "Champion 5 kg", price: 2200, category: "Ciments / Enduits" },
-            { id: 167, name: "Super 5 kg", price: 2200, category: "Ciments / Enduits" },
-            { id: 168, name: "Trapo 5 kg", price: 2200, category: "Ciments / Enduits" },
-
-            // Outils (Trouelles & Grattoirs)
-            { id: 169, name: "Trouelle 18", price: 800, category: "Outils" },
-            { id: 170, name: "Trouelle 20", price: 900, category: "Outils" },
-            { id: 171, name: "Trouelle 16", price: 700, category: "Outils" },
-            { id: 172, name: "Grattoir 18", price: 800, category: "Outils" },
-            { id: 173, name: "Grattoir 20", price: 900, category: "Outils" },
-            { id: 174, name: "Grattoir 16", price: 700, category: "Outils" },
-
-            // Raccords PPR (20/25)
-            { id: 175, name: "Coude PPR 20/25", price: 1000, category: "Plomberie PPR" },
-            { id: 176, name: "Coude F PPR 20/25", price: 400, category: "Plomberie PPR" },
-            { id: 177, name: "Té PPR 20/25", price: 1000, category: "Plomberie PPR" },
-
-            // Colles
-            { id: 178, name: "Colle à bois 1 kg", price: 1400, category: "Colles" },
-            { id: 179, name: "Colle Colombe 1/4", price: 900, category: "Colles" },
-            { id: 180, name: "Colle 777 1/4", price: 800, category: "Colles" },
-            { id: 181, name: "Colle à bois ETR", price: 1000, category: "Colles" },
-
-            // Produits divers
-            { id: 182, name: "Débouche évier", price: 1000, category: "Produits divers" },
-            { id: 183, name: "Vernis à eau Ultra", price: 1600, category: "Produits divers" },
-            { id: 184, name: "Grésil", price: 1100, category: "Produits divers" },
-
-            // Autres clés
-            { id: 185, name: "Clé It", price: 1700, category: "Clés" },
-            { id: 186, name: "Clé 3 coup", price: 1200, category: "Clés" }
+            { id: 1, name: "Té 20/25", price: 100 },
+            { id: 2, name: "Coude PPR 16/20", price: 70 },
+            { id: 3, name: "Manchon PPR 16/20", price: 70 },
+            { id: 4, name: "Té PPR 16/20", price: 76 },
+            { id: 5, name: "Coude F PPR 16/20", price: 250 },
+            { id: 6, name: "Embout PPR 16/20", price: 250 },
+            { id: 7, name: "Réduction 25/16 PPR", price: 100 },
+            { id: 8, name: "Rouleau Deluxe", price: 16000 },
+            { id: 9, name: "Bourette Verte", price: 19000 },
+            { id: 10, name: "Bourette Bleue", price: 17000 },
+            { id: 11, name: "Rouleau Japon/Noir 45/19", price: 12000 },
+            { id: 12, name: "Rouleau Jaune/Noir 19/24", price: 13000 },
+            { id: 13, name: "Perle 27", price: 13000 },
+            { id: 14, name: "VC Chasse Basse", price: 16000 },
+            { id: 15, name: "Lave-main 35", price: 3500 },
+            { id: 16, name: "Lave-main 45", price: 4500 },
+            { id: 17, name: "Rouleau Passola 30", price: 14000 },
+            { id: 18, name: "Rouleau Passola 40", price: 19000 },
+            { id: 19, name: "Africole 15 kg", price: 10000 },
+            { id: 20, name: "Interrupteur simple allumage", price: 2500 },
+            { id: 21, name: "Interrupteur simple allumage Ingelec", price: 6000 },
+            { id: 22, name: "Plaque vierge", price: 2500 },
+            { id: 23, name: "Prise TV", price: 4000 },
+            { id: 24, name: "Prise TV Ingelec", price: 16000 },
+            { id: 25, name: "Prise TV grand", price: 700 },
+            { id: 26, name: "Robinet arrêt 16/20", price: 1000 },
+            { id: 27, name: "Robinet arrêt 20/25", price: 1300 },
+            { id: 28, name: "Robinet arrêt à boisseau 16/20", price: 1200 },
+            { id: 29, name: "Robinet arrêt à boisseau 20/25", price: 1700 },
+            { id: 30, name: "Robinet de douche", price: 1000 },
+            { id: 31, name: "Robinet de cuisine", price: 1500 },
+            { id: 32, name: "Robinet de lavabo", price: 1500 },
+            { id: 33, name: "Robinet lavabo Faucet", price: 2500 },
+            { id: 34, name: "Robinet de douche Faucet", price: 2000 },
+            { id: 35, name: "Robinet cuisine Premier", price: 2500 },
+            { id: 36, name: "Tête de gaz (paquet)", price: 6000 },
+            { id: 37, name: "Clé placard 2 coups", price: 6000 },
+            { id: 38, name: "Clé placard 1 coup", price: 3500 },
+            { id: 39, name: "Flexible de douche en fer", price: 1300 },
+            { id: 40, name: "Flexible de douche", price: 1000 },
+            { id: 41, name: "Flexible de douche femelle", price: 2500 },
+            { id: 42, name: "Coude 16/20 PVC", price: 100 },
+            { id: 43, name: "Coude 20/25 PVC", price: 300 },
+            { id: 44, name: "Coude F 16/20 PVC", price: 200 },
+            { id: 45, name: "Coude F 20/25 PVC", price: 300 },
+            { id: 46, name: "Té 16/20 PVC", price: 100 },
+            { id: 47, name: "Paquet de pinceaux N°1", price: 1000 },
+            { id: 48, name: "Pinceau 1½", price: 1500 },
+            { id: 49, name: "Pinceau N°2", price: 2000 },
+            { id: 50, name: "Pinceau N°3", price: 3000 },
+            { id: 51, name: "Pinceau N°50", price: 3000 },
+            { id: 52, name: "Pinceau 50", price: 3500 },
+            { id: 53, name: "Pinceau 40", price: 2500 },
+            { id: 54, name: "Attache N°8", price: 250 },
+            { id: 55, name: "Attache N°9", price: 300 },
+            { id: 56, name: "Attache N°10", price: 350 },
+            { id: 57, name: "Cheville à vis N°8", price: 600 },
+            { id: 58, name: "Accordéon 32", price: 800 },
+            { id: 59, name: "Accordéon 40", price: 800 },
+            { id: 60, name: "Robinet à clé 16/20", price: 1200 },
+            { id: 61, name: "Robinet à clé 16/20 N°2", price: 1200 },
+            { id: 62, name: "Robinet à boisseau 16/20", price: 1500 },
+            { id: 63, name: "Robinet à clé 20/25", price: 1300 },
+            { id: 64, name: "Robinet à clé 20/25 (autre modèle)", price: 1400 },
+            { id: 65, name: "Robinet à boisseau 20/25", price: 1800 },
+            { id: 66, name: "Porte-savon", price: 600 },
+            { id: 67, name: "Porte-papier", price: 1000 },
+            { id: 68, name: "Tablette", price: 1000 },
+            { id: 69, name: "Boîte 100 × 100 étanche", price: 400 },
+            { id: 70, name: "Boîte 80 × 80", price: 250 },
+            { id: 71, name: "Boîte 150", price: 1300 },
+            { id: 72, name: "Boîte 180 étanche", price: 1700 },
+            { id: 73, name: "Boîte 240 étanche", price: 2500 },
+            { id: 74, name: "Boîte de dérivation 196", price: 600 },
+            { id: 75, name: "Boîte de dérivation 165", price: 100 },
+            { id: 76, name: "Boîte de dérivation 294", price: 1700 },
+            { id: 77, name: "Décapant", price: null },
+            { id: 78, name: "Écras", price: 3500 },
+            { id: 79, name: "Disque à couper tablette", price: null },
+            { id: 80, name: "Disque à couper", price: 800 },
+            { id: 81, name: "Disque à mêler", price: 1600 },
+            { id: 82, name: "Colle à bois 5 kg (bleue)", price: 7500 },
+            { id: 83, name: "Dulian A Ultra", price: 800 },
+            { id: 84, name: "Dulian C", price: 1400 },
+            { id: 85, name: "Dulian A (4 L)", price: 3500 },
+            { id: 86, name: "Dulian C (4 L)", price: 7500 },
+            { id: 87, name: "Sonnerie", price: 1000 },
+            { id: 88, name: "Paquet de prises (prises têtes)", price: 3000 },
+            { id: 89, name: "Prise simple", price: 400 },
+            { id: 90, name: "Interrupteur double", price: 400 },
+            { id: 91, name: "Interrupteur simple (à l'image)", price: 2500 },
+            { id: 92, name: "Interrupteur double (à l'image)", price: 3500 },
+            { id: 93, name: "Paquet de prises têtes étanches", price: 9000 },
+            { id: 94, name: "Sonnerie (autre modèle)", price: 1200 },
+            { id: 95, name: "Boutons pour soie étanches (×10)", price: 9000 },
+            { id: 96, name: "Plaques vierges (paquet)", price: 2500 },
+            { id: 97, name: "Douille", price: 4500 },
+            { id: 98, name: "Paquet de douilles Ingelec", price: 8500 },
+            { id: 99, name: "Prise + terre", price: 10000 },
+            { id: 100, name: "Interrupteur simple va-et-vient Ingelec", price: 9000 },
+            { id: 101, name: "Interrupteur simple allumage Ingelec", price: 6000 },
+            { id: 102, name: "Interrupteur double allumage Ingelec", price: 14000 },
+            { id: 103, name: "Paquet interrupteur double va-et-vient", price: 16000 },
+            { id: 104, name: "Paquet de sonneries Ingelec", price: 2500 },
+            { id: 105, name: "Boutons pour soie encastrés Ingelec", price: 17500 },
+            { id: 106, name: "Prise + terre étanche encastrée", price: 17500 },
+            { id: 107, name: "Prise TV", price: 4000 },
+            { id: 108, name: "Prise TV Ingelec", price: 16000 },
+            { id: 109, name: "Rouleau à peindre petit", price: 300 },
+            { id: 110, name: "Rouleau à peindre grand", price: 700 },
+            { id: 111, name: "Rouleau plastifiable", price: 20000 },
+            { id: 112, name: "Rouleau minci", price: 12000 },
+            { id: 113, name: "Vernis C Ultra", price: 2500 },
+            { id: 114, name: "Antirouille 1 kg", price: 1800 },
+            { id: 115, name: "Antirouille 4 kg", price: 6500 },
+            { id: 116, name: "Delux 1 kg Mat", price: null },
+            { id: 117, name: "Delux 4 kg", price: 7000 },
+            { id: 118, name: "Delux 1 kg", price: 2200 },
+            { id: 119, name: "Rouleaux Pex 12/16", price: 30000 },
+            { id: 120, name: "Écrou 12/16", price: 600 },
+            { id: 121, name: "Manchon 12/16", price: 600 },
+            { id: 122, name: "Coude S 12/16", price: 600 },
+            { id: 123, name: "Coude F 12/16", price: 600 },
+            { id: 124, name: "Tés Pex 12/16", price: 600 },
+            { id: 125, name: "Robinet d'arrêt 12/16", price: 1300 },
+            { id: 126, name: "Coude 110", price: 700 },
+            { id: 127, name: "Coude 100", price: 500 },
+            { id: 128, name: "Coude 75", price: 450 },
+            { id: 129, name: "Coude 125", price: 1100 },
+            { id: 130, name: "Coude 1/8 110", price: 750 },
+            { id: 131, name: "Coude 1/8 100", price: 550 },
+            { id: 132, name: "Coude 1/8 75", price: 450 },
+            { id: 133, name: "Coude 1/8 125", price: 1100 },
+            { id: 134, name: "Tés 75", price: 600 },
+            { id: 135, name: "Tés 110", price: 1000 },
+            { id: 136, name: "Tés 100", price: 900 },
+            { id: 137, name: "Tés 125", price: 1500 },
+            { id: 138, name: "Clé 2 Cup", price: 1000 },
+            { id: 139, name: "Clé maison", price: 2700 },
+            { id: 140, name: "Clé Cannon", price: 3500 },
+            { id: 141, name: "Clé Robson Cannon", price: 3200 },
+            { id: 142, name: "Clé Robson douche", price: 3200 },
+            { id: 143, name: "Boîte Switch Papier", price: 6000 },
+            { id: 144, name: "Acide muriatique", price: 500 },
+            { id: 145, name: "Camping gaz", price: 500 },
+            { id: 146, name: "Pérical", price: 1200 },
+            { id: 147, name: "Pérical Petit", price: 500 },
+            { id: 148, name: "Émaille", price: 600 },
+            { id: 149, name: "Noir à tableau 1 kg", price: 2100 },
+            { id: 150, name: "Noir à tableau 500 g", price: 1300 },
+            { id: 151, name: "Paquet de domino 10", price: 3500 },
+            { id: 152, name: "Paquet de domino 16", price: 4500 },
+            { id: 153, name: "Paquet de domino 25", price: 7500 },
+            { id: 154, name: "Super 30 kg", price: 12500 },
+            { id: 155, name: "Trapo 30 kg", price: 12000 },
+            { id: 156, name: "Milano 30 kg", price: 13500 },
+            { id: 157, name: "Boss 30 kg", price: 15000 },
+            { id: 158, name: "Champion 30 kg", price: 12500 },
+            { id: 159, name: "Deluxe 30 kg", price: 21500 },
+            { id: 160, name: "Super 15 kg", price: 6500 },
+            { id: 161, name: "Trapo 15 kg", price: 6500 },
+            { id: 162, name: "Boss 15 kg", price: 7000 },
+            { id: 163, name: "Deluxe 15 kg", price: 12000 },
+            { id: 164, name: "Champion 15 kg", price: 6500 },
+            { id: 165, name: "Milano 15 kg", price: 6500 },
+            { id: 166, name: "Champion 5 kg", price: 2200 },
+            { id: 167, name: "Super 5 kg", price: 2200 },
+            { id: 168, name: "Trapo 5 kg", price: 2200 },
+            { id: 169, name: "Trouelle 18", price: 800 },
+            { id: 170, name: "Trouelle 20", price: 900 },
+            { id: 171, name: "Trouelle 16", price: 700 },
+            { id: 172, name: "Grattoir 18", price: 800 },
+            { id: 173, name: "Grattoir 20", price: 900 },
+            { id: 174, name: "Grattoir 16", price: 700 },
+            { id: 175, name: "Coude PPR 20/25", price: 1000 },
+            { id: 176, name: "Coude F PPR 20/25", price: 400 },
+            { id: 177, name: "Té PPR 20/25", price: 1000 },
+            { id: 178, name: "Colle à bois 1 kg", price: 1400 },
+            { id: 179, name: "Colle Colombe 1/4", price: 900 },
+            { id: 180, name: "Colle 777 1/4", price: 800 },
+            { id: 181, name: "Colle à bois ETR", price: 1000 },
+            { id: 182, name: "Débouche évier", price: 1000 },
+            { id: 183, name: "Vernis à eau Ultra", price: 1600 },
+            { id: 184, name: "Grésil", price: 1100 },
+            { id: 185, name: "Clé It", price: 1700 },
+            { id: 186, name: "Clé 3 coup", price: 1200 }
         ];
 
         // Variables globales
         let filteredProducts = [...products];
-        let currentCategory = 'Tous';
 
         // Initialisation de l'application
         document.addEventListener('DOMContentLoaded', function() {
@@ -514,43 +415,8 @@
 
         // Initialisation de l'application
         function initializeApp() {
-            renderCategoryFilters();
             renderProducts(filteredProducts);
             setupSearch();
-        }
-
-        // Rendu des filtres de catégories
-        function renderCategoryFilters() {
-            const categoryFilters = document.getElementById('categoryFilters');
-            
-            // Récupérer toutes les catégories uniques
-            const categories = ['Tous', ...new Set(products.map(product => product.category))];
-            
-            // Créer les boutons de catégorie
-            categories.forEach(category => {
-                const button = document.createElement('button');
-                button.className = 'category-btn';
-                button.textContent = category;
-                button.dataset.category = category;
-                
-                if (category === 'Tous') {
-                    button.classList.add('active');
-                }
-                
-                button.addEventListener('click', () => {
-                    // Mettre à jour le bouton actif
-                    document.querySelectorAll('.category-btn').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                    button.classList.add('active');
-                    
-                    // Filtrer par catégorie
-                    currentCategory = category;
-                    filterProducts();
-                });
-                
-                categoryFilters.appendChild(button);
-            });
         }
 
         // Rendu des produits
@@ -581,13 +447,8 @@
                 productPrice.className = 'product-price';
                 productPrice.textContent = product.price ? `${formatPrice(product.price)} FCFA` : 'Prix non renseigné';
                 
-                const productCategory = document.createElement('div');
-                productCategory.className = 'product-category';
-                productCategory.textContent = product.category;
-                
                 productInfo.appendChild(productName);
                 productInfo.appendChild(productPrice);
-                productInfo.appendChild(productCategory);
                 productCard.appendChild(productInfo);
                 
                 productGrid.appendChild(productCard);
@@ -599,22 +460,14 @@
             const searchInput = document.getElementById('searchInput');
             
             searchInput.addEventListener('input', () => {
-                filterProducts();
-            });
-        }
-
-        // Filtrage des produits
-        function filterProducts() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            
-            filteredProducts = products.filter(product => {
-                const matchesSearch = product.name.toLowerCase().includes(searchTerm);
-                const matchesCategory = currentCategory === 'Tous' || product.category === currentCategory;
+                const searchTerm = searchInput.value.toLowerCase();
                 
-                return matchesSearch && matchesCategory;
+                filteredProducts = products.filter(product => {
+                    return product.name.toLowerCase().includes(searchTerm);
+                });
+                
+                renderProducts(filteredProducts);
             });
-            
-            renderProducts(filteredProducts);
         }
 
         // Formatage du prix
