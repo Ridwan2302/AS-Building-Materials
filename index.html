@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AS Building Materials - Votre quincaillerie de confiance</title>
     <meta name="description" content="Catalogue des produits AS Building Materials">
-    <meta name="theme-color" content="#2c3e50">
+    <meta name="theme-color" content="#1a5276">
     <link rel="manifest" href="manifest.json">
     <style>
         /* Reset et styles de base */
@@ -17,18 +17,19 @@
         }
 
         body {
-            background-color: #f5f7fa;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             color: #333;
             line-height: 1.6;
+            min-height: 100vh;
         }
 
         /* En-tête */
         header {
-            background: linear-gradient(135deg, #2c3e50, #3498db);
+            background: linear-gradient(135deg, #1a5276, #2980b9);
             color: white;
             padding: 1.5rem 1rem;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -42,13 +43,15 @@
         }
 
         .logo {
-            font-size: 2rem;
-            margin-right: 0.5rem;
+            font-size: 2.2rem;
+            margin-right: 0.8rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
 
         h1 {
             font-size: 1.8rem;
             margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .tagline {
@@ -59,23 +62,61 @@
         /* Barre de recherche */
         .search-container {
             max-width: 800px;
-            margin: 1.5rem auto;
+            margin: 2rem auto;
             padding: 0 1rem;
+            position: relative;
         }
 
-        .search-box {
-            width: 100%;
-            padding: 1rem;
-            border: none;
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            background: white;
             border-radius: 50px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            font-size: 1rem;
-            outline: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
             transition: all 0.3s ease;
         }
 
-        .search-box:focus {
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        .search-wrapper:focus-within {
+            box-shadow: 0 4px 20px rgba(26, 82, 118, 0.3);
+        }
+
+        .search-box {
+            flex: 1;
+            padding: 1.2rem 1.5rem;
+            border: none;
+            font-size: 1rem;
+            outline: none;
+            background: transparent;
+        }
+
+        .search-button {
+            background: #2980b9;
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-button:hover {
+            background: #1a5276;
+        }
+
+        .search-icon {
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* Titre des articles */
+        .articles-title {
+            text-align: center;
+            margin: 1rem 0 2rem;
+            color: #1a5276;
+            font-size: 1.8rem;
+            font-weight: 600;
         }
 
         /* Liste des produits */
@@ -87,38 +128,134 @@
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
         }
 
         .product-card {
-            background-color: white;
-            border-radius: 10px;
+            background: white;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #eaeaea;
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
         }
 
         .product-info {
-            padding: 1.2rem;
+            padding: 1.5rem;
         }
 
         .product-name {
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
             font-size: 1.1rem;
             color: #2c3e50;
+            line-height: 1.4;
         }
 
         .product-price {
             font-weight: 700;
             color: #e74c3c;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .product-detail-link {
+            color: #2980b9;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: color 0.2s ease;
+        }
+
+        .product-detail-link:hover {
+            color: #1a5276;
+        }
+
+        .detail-icon {
+            margin-left: 0.3rem;
+            font-size: 0.8rem;
+        }
+
+        /* Popup */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .popup-overlay.active .popup {
+            transform: scale(1);
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #7f8c8d;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .popup-close:hover {
+            color: #e74c3c;
+        }
+
+        .popup-title {
+            font-size: 1.5rem;
+            color: #1a5276;
+            margin-bottom: 1rem;
+            padding-right: 2rem;
+        }
+
+        .popup-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #e74c3c;
+            margin-bottom: 1.5rem;
+        }
+
+        .popup-description {
+            color: #5d6d7e;
+            line-height: 1.6;
+            font-size: 1rem;
         }
 
         /* État de chargement */
@@ -132,7 +269,7 @@
         /* Message quand aucun produit n'est trouvé */
         .no-products {
             text-align: center;
-            padding: 2rem;
+            padding: 3rem;
             font-size: 1.2rem;
             color: #7f8c8d;
             grid-column: 1 / -1;
@@ -140,11 +277,11 @@
 
         /* Pied de page */
         footer {
-            background-color: #2c3e50;
+            background: linear-gradient(135deg, #1a5276, #2980b9);
             color: white;
             text-align: center;
-            padding: 1.5rem;
-            margin-top: 2rem;
+            padding: 2rem;
+            margin-top: 3rem;
         }
 
         /* Badge PWA */
@@ -152,15 +289,21 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: #3498db;
+            background: #2980b9;
             color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
+            padding: 0.7rem 1.2rem;
+            border-radius: 25px;
             font-size: 0.8rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             cursor: pointer;
             z-index: 1000;
             display: none;
+            transition: all 0.3s ease;
+        }
+
+        .pwa-badge:hover {
+            background: #1a5276;
+            transform: translateY(-2px);
         }
 
         /* Responsive */
@@ -176,11 +319,29 @@
             .tagline {
                 font-size: 0.9rem;
             }
+            
+            .articles-title {
+                font-size: 1.5rem;
+            }
         }
 
         @media (max-width: 480px) {
             .product-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .search-wrapper {
+                flex-direction: column;
+                border-radius: 12px;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .search-button {
+                width: 100%;
+                border-radius: 0 0 12px 12px;
             }
         }
     </style>
@@ -197,8 +358,15 @@
     </header>
 
     <div class="search-container">
-        <input type="text" id="searchInput" class="search-box" placeholder="Rechercher un produit...">
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" class="search-box" placeholder="Rechercher un article...">
+            <button class="search-button" id="searchButton">
+                <span class="search-icon">🔍</span>
+            </button>
+        </div>
     </div>
+
+    <h2 class="articles-title">Tous nos articles</h2>
 
     <main class="products-container">
         <div class="product-grid" id="productGrid">
@@ -210,79 +378,32 @@
         <p>AS Building Materials &copy; 2023 - Tous droits réservés</p>
     </footer>
 
+    <!-- Popup pour les détails du produit -->
+    <div class="popup-overlay" id="productPopup">
+        <div class="popup">
+            <button class="popup-close" id="closePopup">×</button>
+            <h3 class="popup-title" id="popupProductName"></h3>
+            <div class="popup-price" id="popupProductPrice"></div>
+            <div class="popup-description" id="popupProductDescription"></div>
+        </div>
+    </div>
+
     <div class="pwa-badge" id="pwaBadge">Installer l'application</div>
 
     <script>
-        // Données des produits
+        // Données des produits triées par ordre alphabétique
         const products = [
-            { id: 1, name: "Té 20/25", price: 100 },
-            { id: 2, name: "Coude PPR 16/20", price: 70 },
-            { id: 3, name: "Manchon PPR 16/20", price: 70 },
-            { id: 4, name: "Té PPR 16/20", price: 76 },
-            { id: 5, name: "Coude F PPR 16/20", price: 250 },
-            { id: 6, name: "Embout PPR 16/20", price: 250 },
-            { id: 7, name: "Réduction 25/16 PPR", price: 100 },
-            { id: 8, name: "Rouleau Deluxe", price: 16000 },
-            { id: 9, name: "Bourette Verte", price: 19000 },
-            { id: 10, name: "Bourette Bleue", price: 17000 },
-            { id: 11, name: "Rouleau Japon/Noir 45/19", price: 12000 },
-            { id: 12, name: "Rouleau Jaune/Noir 19/24", price: 13000 },
-            { id: 13, name: "Perle 27", price: 13000 },
-            { id: 14, name: "VC Chasse Basse", price: 16000 },
-            { id: 15, name: "Lave-main 35", price: 3500 },
-            { id: 16, name: "Lave-main 45", price: 4500 },
-            { id: 17, name: "Rouleau Passola 30", price: 14000 },
-            { id: 18, name: "Rouleau Passola 40", price: 19000 },
+            { id: 144, name: "Acide muriatique", price: 500 },
+            { id: 58, name: "Accordéon 32", price: 800 },
+            { id: 59, name: "Accordéon 40", price: 800 },
             { id: 19, name: "Africole 15 kg", price: 10000 },
-            { id: 20, name: "Interrupteur simple allumage", price: 2500 },
-            { id: 21, name: "Interrupteur simple allumage Ingelec", price: 6000 },
-            { id: 22, name: "Plaque vierge", price: 2500 },
-            { id: 23, name: "Prise TV", price: 4000 },
-            { id: 24, name: "Prise TV Ingelec", price: 16000 },
-            { id: 25, name: "Prise TV grand", price: 700 },
-            { id: 26, name: "Robinet arrêt 16/20", price: 1000 },
-            { id: 27, name: "Robinet arrêt 20/25", price: 1300 },
-            { id: 28, name: "Robinet arrêt à boisseau 16/20", price: 1200 },
-            { id: 29, name: "Robinet arrêt à boisseau 20/25", price: 1700 },
-            { id: 30, name: "Robinet de douche", price: 1000 },
-            { id: 31, name: "Robinet de cuisine", price: 1500 },
-            { id: 32, name: "Robinet de lavabo", price: 1500 },
-            { id: 33, name: "Robinet lavabo Faucet", price: 2500 },
-            { id: 34, name: "Robinet de douche Faucet", price: 2000 },
-            { id: 35, name: "Robinet cuisine Premier", price: 2500 },
-            { id: 36, name: "Tête de gaz (paquet)", price: 6000 },
-            { id: 37, name: "Clé placard 2 coups", price: 6000 },
-            { id: 38, name: "Clé placard 1 coup", price: 3500 },
-            { id: 39, name: "Flexible de douche en fer", price: 1300 },
-            { id: 40, name: "Flexible de douche", price: 1000 },
-            { id: 41, name: "Flexible de douche femelle", price: 2500 },
-            { id: 42, name: "Coude 16/20 PVC", price: 100 },
-            { id: 43, name: "Coude 20/25 PVC", price: 300 },
-            { id: 44, name: "Coude F 16/20 PVC", price: 200 },
-            { id: 45, name: "Coude F 20/25 PVC", price: 300 },
-            { id: 46, name: "Té 16/20 PVC", price: 100 },
-            { id: 47, name: "Paquet de pinceaux N°1", price: 1000 },
-            { id: 48, name: "Pinceau 1½", price: 1500 },
-            { id: 49, name: "Pinceau N°2", price: 2000 },
-            { id: 50, name: "Pinceau N°3", price: 3000 },
-            { id: 51, name: "Pinceau N°50", price: 3000 },
-            { id: 52, name: "Pinceau 50", price: 3500 },
-            { id: 53, name: "Pinceau 40", price: 2500 },
+            { id: 114, name: "Antirouille 1 kg", price: 1800 },
+            { id: 115, name: "Antirouille 4 kg", price: 6500 },
             { id: 54, name: "Attache N°8", price: 250 },
             { id: 55, name: "Attache N°9", price: 300 },
             { id: 56, name: "Attache N°10", price: 350 },
-            { id: 57, name: "Cheville à vis N°8", price: 600 },
-            { id: 58, name: "Accordéon 32", price: 800 },
-            { id: 59, name: "Accordéon 40", price: 800 },
-            { id: 60, name: "Robinet à clé 16/20", price: 1200 },
-            { id: 61, name: "Robinet à clé 16/20 N°2", price: 1200 },
-            { id: 62, name: "Robinet à boisseau 16/20", price: 1500 },
-            { id: 63, name: "Robinet à clé 20/25", price: 1300 },
-            { id: 64, name: "Robinet à clé 20/25 (autre modèle)", price: 1400 },
-            { id: 65, name: "Robinet à boisseau 20/25", price: 1800 },
-            { id: 66, name: "Porte-savon", price: 600 },
-            { id: 67, name: "Porte-papier", price: 1000 },
-            { id: 68, name: "Tablette", price: 1000 },
+            { id: 157, name: "Boss 30 kg", price: 15000 },
+            { id: 162, name: "Boss 15 kg", price: 7000 },
             { id: 69, name: "Boîte 100 × 100 étanche", price: 400 },
             { id: 70, name: "Boîte 80 × 80", price: 250 },
             { id: 71, name: "Boîte 150", price: 1300 },
@@ -291,55 +412,32 @@
             { id: 74, name: "Boîte de dérivation 196", price: 600 },
             { id: 75, name: "Boîte de dérivation 165", price: 100 },
             { id: 76, name: "Boîte de dérivation 294", price: 1700 },
-            { id: 77, name: "Décapant", price: null },
-            { id: 78, name: "Écras", price: 3500 },
-            { id: 79, name: "Disque à couper tablette", price: null },
-            { id: 80, name: "Disque à couper", price: 800 },
-            { id: 81, name: "Disque à mêler", price: 1600 },
-            { id: 82, name: "Colle à bois 5 kg (bleue)", price: 7500 },
-            { id: 83, name: "Dulian A Ultra", price: 800 },
-            { id: 84, name: "Dulian C", price: 1400 },
-            { id: 85, name: "Dulian A (4 L)", price: 3500 },
-            { id: 86, name: "Dulian C (4 L)", price: 7500 },
-            { id: 87, name: "Sonnerie", price: 1000 },
-            { id: 88, name: "Paquet de prises (prises têtes)", price: 3000 },
-            { id: 89, name: "Prise simple", price: 400 },
-            { id: 90, name: "Interrupteur double", price: 400 },
-            { id: 91, name: "Interrupteur simple (à l'image)", price: 2500 },
-            { id: 92, name: "Interrupteur double (à l'image)", price: 3500 },
-            { id: 93, name: "Paquet de prises têtes étanches", price: 9000 },
-            { id: 94, name: "Sonnerie (autre modèle)", price: 1200 },
-            { id: 95, name: "Boutons pour soie étanches (×10)", price: 9000 },
-            { id: 96, name: "Plaques vierges (paquet)", price: 2500 },
-            { id: 97, name: "Douille", price: 4500 },
-            { id: 98, name: "Paquet de douilles Ingelec", price: 8500 },
-            { id: 99, name: "Prise + terre", price: 10000 },
-            { id: 100, name: "Interrupteur simple va-et-vient Ingelec", price: 9000 },
-            { id: 101, name: "Interrupteur simple allumage Ingelec", price: 6000 },
-            { id: 102, name: "Interrupteur double allumage Ingelec", price: 14000 },
-            { id: 103, name: "Paquet interrupteur double va-et-vient", price: 16000 },
-            { id: 104, name: "Paquet de sonneries Ingelec", price: 2500 },
+            { id: 143, name: "Boîte Switch Papier", price: 6000 },
+            { id: 9, name: "Bourette Verte", price: 19000 },
+            { id: 10, name: "Bourette Bleue", price: 17000 },
             { id: 105, name: "Boutons pour soie encastrés Ingelec", price: 17500 },
-            { id: 106, name: "Prise + terre étanche encastrée", price: 17500 },
-            { id: 107, name: "Prise TV", price: 4000 },
-            { id: 108, name: "Prise TV Ingelec", price: 16000 },
-            { id: 109, name: "Rouleau à peindre petit", price: 300 },
-            { id: 110, name: "Rouleau à peindre grand", price: 700 },
-            { id: 111, name: "Rouleau plastifiable", price: 20000 },
-            { id: 112, name: "Rouleau minci", price: 12000 },
-            { id: 113, name: "Vernis C Ultra", price: 2500 },
-            { id: 114, name: "Antirouille 1 kg", price: 1800 },
-            { id: 115, name: "Antirouille 4 kg", price: 6500 },
-            { id: 116, name: "Delux 1 kg Mat", price: null },
-            { id: 117, name: "Delux 4 kg", price: 7000 },
-            { id: 118, name: "Delux 1 kg", price: 2200 },
-            { id: 119, name: "Rouleaux Pex 12/16", price: 30000 },
-            { id: 120, name: "Écrou 12/16", price: 600 },
-            { id: 121, name: "Manchon 12/16", price: 600 },
-            { id: 122, name: "Coude S 12/16", price: 600 },
-            { id: 123, name: "Coude F 12/16", price: 600 },
-            { id: 124, name: "Tés Pex 12/16", price: 600 },
-            { id: 125, name: "Robinet d'arrêt 12/16", price: 1300 },
+            { id: 95, name: "Boutons pour soie étanches (×10)", price: 9000 },
+            { id: 145, name: "Camping gaz", price: 500 },
+            { id: 158, name: "Champion 30 kg", price: 12500 },
+            { id: 164, name: "Champion 15 kg", price: 6500 },
+            { id: 166, name: "Champion 5 kg", price: 2200 },
+            { id: 57, name: "Cheville à vis N°8", price: 600 },
+            { id: 138, name: "Clé 2 Cup", price: 1000 },
+            { id: 186, name: "Clé 3 coup", price: 1200 },
+            { id: 140, name: "Clé Cannon", price: 3500 },
+            { id: 185, name: "Clé It", price: 1700 },
+            { id: 139, name: "Clé maison", price: 2700 },
+            { id: 38, name: "Clé placard 1 coup", price: 3500 },
+            { id: 37, name: "Clé placard 2 coups", price: 6000 },
+            { id: 141, name: "Clé Robson Cannon", price: 3200 },
+            { id: 142, name: "Clé Robson douche", price: 3200 },
+            { id: 178, name: "Colle à bois 1 kg", price: 1400 },
+            { id: 82, name: "Colle à bois 5 kg (bleue)", price: 7500 },
+            { id: 181, name: "Colle à bois ETR", price: 1000 },
+            { id: 179, name: "Colle Colombe 1/4", price: 900 },
+            { id: 180, name: "Colle 777 1/4", price: 800 },
+            { id: 42, name: "Coude 16/20 PVC", price: 100 },
+            { id: 43, name: "Coude 20/25 PVC", price: 300 },
             { id: 126, name: "Coude 110", price: 700 },
             { id: 127, name: "Coude 100", price: 500 },
             { id: 128, name: "Coude 75", price: 450 },
@@ -348,60 +446,139 @@
             { id: 131, name: "Coude 1/8 100", price: 550 },
             { id: 132, name: "Coude 1/8 75", price: 450 },
             { id: 133, name: "Coude 1/8 125", price: 1100 },
+            { id: 44, name: "Coude F 16/20 PVC", price: 200 },
+            { id: 45, name: "Coude F 20/25 PVC", price: 300 },
+            { id: 122, name: "Coude F 12/16", price: 600 },
+            { id: 176, name: "Coude F PPR 20/25", price: 400 },
+            { id: 5, name: "Coude F PPR 16/20", price: 250 },
+            { id: 2, name: "Coude PPR 16/20", price: 70 },
+            { id: 175, name: "Coude PPR 20/25", price: 1000 },
+            { id: 121, name: "Coude S 12/16", price: 600 },
+            { id: 77, name: "Décapant", price: null },
+            { id: 182, name: "Débouche évier", price: 1000 },
+            { id: 116, name: "Delux 1 kg Mat", price: null },
+            { id: 118, name: "Delux 1 kg", price: 2200 },
+            { id: 117, name: "Delux 4 kg", price: 7000 },
+            { id: 159, name: "Deluxe 30 kg", price: 21500 },
+            { id: 163, name: "Deluxe 15 kg", price: 12000 },
+            { id: 151, name: "Domino 10 (paquet)", price: 3500 },
+            { id: 152, name: "Domino 16 (paquet)", price: 4500 },
+            { id: 153, name: "Domino 25 (paquet)", price: 7500 },
+            { id: 97, name: "Douille", price: 4500 },
+            { id: 83, name: "Dulian A Ultra", price: 800 },
+            { id: 85, name: "Dulian A (4 L)", price: 3500 },
+            { id: 84, name: "Dulian C", price: 1400 },
+            { id: 86, name: "Dulian C (4 L)", price: 7500 },
+            { id: 78, name: "Écras", price: 3500 },
+            { id: 120, name: "Écrou 12/16", price: 600 },
+            { id: 148, name: "Émaille", price: 600 },
+            { id: 6, name: "Embout PPR 16/20", price: 250 },
+            { id: 39, name: "Flexible de douche en fer", price: 1300 },
+            { id: 40, name: "Flexible de douche", price: 1000 },
+            { id: 41, name: "Flexible de douche femelle", price: 2500 },
+            { id: 172, name: "Grattoir 16", price: 700 },
+            { id: 173, name: "Grattoir 18", price: 800 },
+            { id: 174, name: "Grattoir 20", price: 900 },
+            { id: 184, name: "Grésil", price: 1100 },
+            { id: 90, name: "Interrupteur double", price: 400 },
+            { id: 92, name: "Interrupteur double (à l'image)", price: 3500 },
+            { id: 102, name: "Interrupteur double allumage Ingelec", price: 14000 },
+            { id: 91, name: "Interrupteur simple (à l'image)", price: 2500 },
+            { id: 20, name: "Interrupteur simple allumage", price: 2500 },
+            { id: 21, name: "Interrupteur simple allumage Ingelec", price: 6000 },
+            { id: 100, name: "Interrupteur simple va-et-vient Ingelec", price: 9000 },
+            { id: 15, name: "Lave-main 35", price: 3500 },
+            { id: 16, name: "Lave-main 45", price: 4500 },
+            { id: 121, name: "Manchon 12/16", price: 600 },
+            { id: 3, name: "Manchon PPR 16/20", price: 70 },
+            { id: 156, name: "Milano 30 kg", price: 13500 },
+            { id: 165, name: "Milano 15 kg", price: 6500 },
+            { id: 149, name: "Noir à tableau 1 kg", price: 2100 },
+            { id: 150, name: "Noir à tableau 500 g", price: 1300 },
+            { id: 79, name: "Disque à couper tablette", price: null },
+            { id: 80, name: "Disque à couper", price: 800 },
+            { id: 81, name: "Disque à mêler", price: 1600 },
+            { id: 47, name: "Paquet de pinceaux N°1", price: 1000 },
+            { id: 88, name: "Paquet de prises (prises têtes)", price: 3000 },
+            { id: 93, name: "Paquet de prises têtes étanches", price: 9000 },
+            { id: 104, name: "Paquet de sonneries Ingelec", price: 2500 },
+            { id: 98, name: "Paquet de douilles Ingelec", price: 8500 },
+            { id: 103, name: "Paquet interrupteur double va-et-vient", price: 16000 },
+            { id: 146, name: "Pérical", price: 1200 },
+            { id: 147, name: "Pérical Petit", price: 500 },
+            { id: 13, name: "Perle 27", price: 13000 },
+            { id: 48, name: "Pinceau 1½", price: 1500 },
+            { id: 53, name: "Pinceau 40", price: 2500 },
+            { id: 52, name: "Pinceau 50", price: 3500 },
+            { id: 49, name: "Pinceau N°2", price: 2000 },
+            { id: 50, name: "Pinceau N°3", price: 3000 },
+            { id: 51, name: "Pinceau N°50", price: 3000 },
+            { id: 22, name: "Plaque vierge", price: 2500 },
+            { id: 96, name: "Plaques vierges (paquet)", price: 2500 },
+            { id: 67, name: "Porte-papier", price: 1000 },
+            { id: 66, name: "Porte-savon", price: 600 },
+            { id: 89, name: "Prise simple", price: 400 },
+            { id: 99, name: "Prise + terre", price: 10000 },
+            { id: 106, name: "Prise + terre étanche encastrée", price: 17500 },
+            { id: 23, name: "Prise TV", price: 4000 },
+            { id: 107, name: "Prise TV", price: 4000 },
+            { id: 24, name: "Prise TV Ingelec", price: 16000 },
+            { id: 108, name: "Prise TV Ingelec", price: 16000 },
+            { id: 25, name: "Prise TV grand", price: 700 },
+            { id: 7, name: "Réduction 25/16 PPR", price: 100 },
+            { id: 26, name: "Robinet arrêt 16/20", price: 1000 },
+            { id: 27, name: "Robinet arrêt 20/25", price: 1300 },
+            { id: 28, name: "Robinet arrêt à boisseau 16/20", price: 1200 },
+            { id: 29, name: "Robinet arrêt à boisseau 20/25", price: 1700 },
+            { id: 60, name: "Robinet à clé 16/20", price: 1200 },
+            { id: 61, name: "Robinet à clé 16/20 N°2", price: 1200 },
+            { id: 63, name: "Robinet à clé 20/25", price: 1300 },
+            { id: 64, name: "Robinet à clé 20/25 (autre modèle)", price: 1400 },
+            { id: 62, name: "Robinet à boisseau 16/20", price: 1500 },
+            { id: 65, name: "Robinet à boisseau 20/25", price: 1800 },
+            { id: 125, name: "Robinet d'arrêt 12/16", price: 1300 },
+            { id: 30, name: "Robinet de douche", price: 1000 },
+            { id: 34, name: "Robinet de douche Faucet", price: 2000 },
+            { id: 31, name: "Robinet de cuisine", price: 1500 },
+            { id: 35, name: "Robinet cuisine Premier", price: 2500 },
+            { id: 32, name: "Robinet de lavabo", price: 1500 },
+            { id: 33, name: "Robinet lavabo Faucet", price: 2500 },
+            { id: 8, name: "Rouleau Deluxe", price: 16000 },
+            { id: 11, name: "Rouleau Japon/Noir 45/19", price: 12000 },
+            { id: 12, name: "Rouleau Jaune/Noir 19/24", price: 13000 },
+            { id: 17, name: "Rouleau Passola 30", price: 14000 },
+            { id: 18, name: "Rouleau Passola 40", price: 19000 },
+            { id: 109, name: "Rouleau à peindre petit", price: 300 },
+            { id: 110, name: "Rouleau à peindre grand", price: 700 },
+            { id: 112, name: "Rouleau minci", price: 12000 },
+            { id: 111, name: "Rouleau plastifiable", price: 20000 },
+            { id: 119, name: "Rouleaux Pex 12/16", price: 30000 },
+            { id: 87, name: "Sonnerie", price: 1000 },
+            { id: 94, name: "Sonnerie (autre modèle)", price: 1200 },
+            { id: 154, name: "Super 30 kg", price: 12500 },
+            { id: 160, name: "Super 15 kg", price: 6500 },
+            { id: 167, name: "Super 5 kg", price: 2200 },
+            { id: 68, name: "Tablette", price: 1000 },
+            { id: 1, name: "Té 20/25", price: 100 },
+            { id: 4, name: "Té PPR 16/20", price: 76 },
+            { id: 177, name: "Té PPR 20/25", price: 1000 },
+            { id: 46, name: "Té 16/20 PVC", price: 100 },
+            { id: 124, name: "Tés Pex 12/16", price: 600 },
             { id: 134, name: "Tés 75", price: 600 },
             { id: 135, name: "Tés 110", price: 1000 },
             { id: 136, name: "Tés 100", price: 900 },
             { id: 137, name: "Tés 125", price: 1500 },
-            { id: 138, name: "Clé 2 Cup", price: 1000 },
-            { id: 139, name: "Clé maison", price: 2700 },
-            { id: 140, name: "Clé Cannon", price: 3500 },
-            { id: 141, name: "Clé Robson Cannon", price: 3200 },
-            { id: 142, name: "Clé Robson douche", price: 3200 },
-            { id: 143, name: "Boîte Switch Papier", price: 6000 },
-            { id: 144, name: "Acide muriatique", price: 500 },
-            { id: 145, name: "Camping gaz", price: 500 },
-            { id: 146, name: "Pérical", price: 1200 },
-            { id: 147, name: "Pérical Petit", price: 500 },
-            { id: 148, name: "Émaille", price: 600 },
-            { id: 149, name: "Noir à tableau 1 kg", price: 2100 },
-            { id: 150, name: "Noir à tableau 500 g", price: 1300 },
-            { id: 151, name: "Paquet de domino 10", price: 3500 },
-            { id: 152, name: "Paquet de domino 16", price: 4500 },
-            { id: 153, name: "Paquet de domino 25", price: 7500 },
-            { id: 154, name: "Super 30 kg", price: 12500 },
+            { id: 36, name: "Tête de gaz (paquet)", price: 6000 },
             { id: 155, name: "Trapo 30 kg", price: 12000 },
-            { id: 156, name: "Milano 30 kg", price: 13500 },
-            { id: 157, name: "Boss 30 kg", price: 15000 },
-            { id: 158, name: "Champion 30 kg", price: 12500 },
-            { id: 159, name: "Deluxe 30 kg", price: 21500 },
-            { id: 160, name: "Super 15 kg", price: 6500 },
             { id: 161, name: "Trapo 15 kg", price: 6500 },
-            { id: 162, name: "Boss 15 kg", price: 7000 },
-            { id: 163, name: "Deluxe 15 kg", price: 12000 },
-            { id: 164, name: "Champion 15 kg", price: 6500 },
-            { id: 165, name: "Milano 15 kg", price: 6500 },
-            { id: 166, name: "Champion 5 kg", price: 2200 },
-            { id: 167, name: "Super 5 kg", price: 2200 },
             { id: 168, name: "Trapo 5 kg", price: 2200 },
+            { id: 171, name: "Trouelle 16", price: 700 },
             { id: 169, name: "Trouelle 18", price: 800 },
             { id: 170, name: "Trouelle 20", price: 900 },
-            { id: 171, name: "Trouelle 16", price: 700 },
-            { id: 172, name: "Grattoir 18", price: 800 },
-            { id: 173, name: "Grattoir 20", price: 900 },
-            { id: 174, name: "Grattoir 16", price: 700 },
-            { id: 175, name: "Coude PPR 20/25", price: 1000 },
-            { id: 176, name: "Coude F PPR 20/25", price: 400 },
-            { id: 177, name: "Té PPR 20/25", price: 1000 },
-            { id: 178, name: "Colle à bois 1 kg", price: 1400 },
-            { id: 179, name: "Colle Colombe 1/4", price: 900 },
-            { id: 180, name: "Colle 777 1/4", price: 800 },
-            { id: 181, name: "Colle à bois ETR", price: 1000 },
-            { id: 182, name: "Débouche évier", price: 1000 },
-            { id: 183, name: "Vernis à eau Ultra", price: 1600 },
-            { id: 184, name: "Grésil", price: 1100 },
-            { id: 185, name: "Clé It", price: 1700 },
-            { id: 186, name: "Clé 3 coup", price: 1200 }
-        ];
+            { id: 14, name: "VC Chasse Basse", price: 16000 },
+            { id: 113, name: "Vernis C Ultra", price: 2500 },
+            { id: 183, name: "Vernis à eau Ultra", price: 1600 }
+        ].sort((a, b) => a.name.localeCompare(b.name));
 
         // Variables globales
         let filteredProducts = [...products];
@@ -417,6 +594,7 @@
         function initializeApp() {
             renderProducts(filteredProducts);
             setupSearch();
+            setupPopup();
         }
 
         // Rendu des produits
@@ -427,7 +605,7 @@
             if (productsToRender.length === 0) {
                 const noProducts = document.createElement('div');
                 noProducts.className = 'no-products';
-                noProducts.textContent = 'Aucun produit trouvé';
+                noProducts.textContent = 'Aucun article trouvé';
                 productGrid.appendChild(noProducts);
                 return;
             }
@@ -435,6 +613,7 @@
             productsToRender.forEach(product => {
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card';
+                productCard.dataset.id = product.id;
                 
                 const productInfo = document.createElement('div');
                 productInfo.className = 'product-info';
@@ -445,11 +624,21 @@
                 
                 const productPrice = document.createElement('div');
                 productPrice.className = 'product-price';
-                productPrice.textContent = product.price ? `${formatPrice(product.price)} FCFA` : 'Prix non renseigné';
+                productPrice.textContent = product.price ? `${formatPrice(product.price)} FCFA` : 'Prix sur demande';
+                
+                const productDetailLink = document.createElement('div');
+                productDetailLink.className = 'product-detail-link';
+                productDetailLink.innerHTML = 'Détails <span class="detail-icon">›</span>';
                 
                 productInfo.appendChild(productName);
                 productInfo.appendChild(productPrice);
+                productInfo.appendChild(productDetailLink);
                 productCard.appendChild(productInfo);
+                
+                // Ajouter l'événement de clic sur toute la carte
+                productCard.addEventListener('click', () => {
+                    openProductPopup(product);
+                });
                 
                 productGrid.appendChild(productCard);
             });
@@ -458,16 +647,88 @@
         // Configuration de la recherche
         function setupSearch() {
             const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
             
+            // Recherche lors de la frappe
             searchInput.addEventListener('input', () => {
-                const searchTerm = searchInput.value.toLowerCase();
-                
-                filteredProducts = products.filter(product => {
-                    return product.name.toLowerCase().includes(searchTerm);
-                });
-                
-                renderProducts(filteredProducts);
+                filterProducts();
             });
+            
+            // Recherche lors du clic sur le bouton
+            searchButton.addEventListener('click', () => {
+                filterProducts();
+            });
+            
+            // Recherche avec la touche Entrée
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    filterProducts();
+                }
+            });
+        }
+
+        // Filtrage des produits
+        function filterProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            filteredProducts = products.filter(product => {
+                return product.name.toLowerCase().includes(searchTerm);
+            });
+            
+            renderProducts(filteredProducts);
+        }
+
+        // Configuration de la popup
+        function setupPopup() {
+            const popup = document.getElementById('productPopup');
+            const closePopup = document.getElementById('closePopup');
+            
+            // Fermer la popup
+            closePopup.addEventListener('click', () => {
+                popup.classList.remove('active');
+            });
+            
+            // Fermer en cliquant en dehors
+            popup.addEventListener('click', (e) => {
+                if (e.target === popup) {
+                    popup.classList.remove('active');
+                }
+            });
+            
+            // Fermer avec la touche Échap
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    popup.classList.remove('active');
+                }
+            });
+        }
+
+        // Ouvrir la popup du produit
+        function openProductPopup(product) {
+            const popup = document.getElementById('productPopup');
+            const popupProductName = document.getElementById('popupProductName');
+            const popupProductPrice = document.getElementById('popupProductPrice');
+            const popupProductDescription = document.getElementById('popupProductDescription');
+            
+            popupProductName.textContent = product.name;
+            
+            if (product.price) {
+                popupProductPrice.textContent = `${formatPrice(product.price)} FCFA`;
+                popupProductDescription.innerHTML = `
+                    <p>Cet article <strong>${product.name}</strong> est disponible au prix de <strong>${formatPrice(product.price)} FCFA</strong>.</p>
+                    <p>Il s'agit d'un produit de qualité que nous proposons à un prix compétitif pour répondre à vos besoins.</p>
+                    <p>N'hésitez pas à nous contacter pour plus d'informations ou pour passer commande.</p>
+                `;
+            } else {
+                popupProductPrice.textContent = "Prix sur demande";
+                popupProductDescription.innerHTML = `
+                    <p>Pour cet article <strong>${product.name}</strong>, le prix est disponible sur demande.</p>
+                    <p>Contactez-nous pour obtenir un devis personnalisé et connaître les conditions de vente.</p>
+                    <p>Nous restons à votre disposition pour toute information complémentaire.</p>
+                `;
+            }
+            
+            popup.classList.add('active');
         }
 
         // Formatage du prix
@@ -572,17 +833,17 @@
             "description": "Votre quincaillerie de confiance",
             "start_url": "/",
             "display": "standalone",
-            "background_color": "#f5f7fa",
-            "theme_color": "#2c3e50",
+            "background_color": "#f8f9fa",
+            "theme_color": "#1a5276",
             "orientation": "portrait-primary",
             "icons": [
                 {
-                    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMzNDk4ZGIiLz4KPHBhdGggZD0iTTk2IDQ0TDE0NCA5Mkg0OEw5NiA0NFoiIGZpbGw9IndoaXRlIi8+CjxyZWN0IHg9Ijc2IiB5PSIxMDQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0OCIgcng9IjgiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=",
+                    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMxYTUyNzYiLz4KPHBhdGggZD0iTTk2IDQ0TDE0NCA5Mkg0OEw5NiA0NFoiIGZpbGw9IndoaXRlIi8+CjxyZWN0IHg9Ijc2IiB5PSIxMDQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0OCIgcng9IjgiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=",
                     "sizes": "192x192",
                     "type": "image/svg+xml"
                 },
                 {
-                    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiMzNDk4ZGIiLz4KPHBhdGggZD0iTTI1NiAxMTdMMzg0IDI1NkgxMjhMMjU2IDExN1oiIGZpbGw9IndoaXRlIi8+CjxyZWN0IHg9IjIwMiIgeT0iMjc3IiB3aWR0aD0iMTA4IiBoZWlnaHQ9IjEyOCIgcng9IjIxIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K",
+                    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiMxYTUyNzYiLz4KPHBhdGggZD0iTTI1NiAxMTdMMzg0IDI1NkgxMjhMMjU2IDExN1oiIGZpbGw9IndoaXRlIi8+CjxyZWN0IHg9IjIwMiIgeT0iMjc3IiB3aWR0aD0iMTA4IiBoZWlnaHQ9IjEyOCIgcng9IjIxIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K",
                     "sizes": "512x512",
                     "type": "image/svg+xml"
                 }
